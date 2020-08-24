@@ -17,6 +17,13 @@ class PlayerTest < ApiTest
     assert_equal player_attributes.to_json, @player.to_json
   end
 
+  def test_goal
+    @player.nivel = "X"
+    result = @player.goal(ruleset)
+    assert_kind_of Integer, result
+    assert_equal ruleset["X"], result
+  end
+
   def test_individual_bonus_percentage
     @player.nivel = "X"
     @player.goles = 19

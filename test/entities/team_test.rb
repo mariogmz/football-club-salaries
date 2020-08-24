@@ -6,11 +6,19 @@ class TeamTest < ApiTest
     @team = Team.new(players_list)
   end
 
-  def test_team_score
+  def test_score
     score = players_data.inject(0) do |sum, player|
       sum + player[:goles]
     end
-    assert_equal score, @team.team_score
+    assert_equal score, @team.score
+  end
+
+  def test_goal
+    goal = players_data.inject(0) do |sum, player|
+      sum + @team.ruleset[player[:nivel]]
+    end
+
+    assert_equal goal, @team.goal
   end
 
   private

@@ -11,13 +11,16 @@ class Player
     end
   end
 
+  def goal(ruleset)
+    ruleset[nivel]
+  end
+
   def calculate_individual_bonus_percentage(ruleset)
-    score_per_month = ruleset[nivel]
     @individual_bonus_percentage =
-      if goles > score_per_month
+      if goles > goal(ruleset)
         1
       else
-        goles / score_per_month.to_f
+        goles / goal(ruleset).to_f
       end
     @individual_bonus_percentage
   end
