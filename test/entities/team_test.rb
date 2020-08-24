@@ -3,7 +3,7 @@
 class TeamTest < ApiTest
   def setup
     super
-    @team = Team.new(players_list)
+    @team = Team.new("Test FC", players_list)
   end
 
   def test_score
@@ -29,6 +29,17 @@ class TeamTest < ApiTest
     result = @team.bonus_percentage
     assert_kind_of Float, result
     assert_equal expected, result
+  end
+
+  def test_players_with_salaries
+    @team.expects(:bonus_percentage).returns(1.0)
+
+    result = @team.players_with_salaries
+    assert_kind_of Array, result
+    result.each do |player|
+      assert_kind_of Player, player
+      assert_not player.sueldo_completo.nil?
+    end
   end
 
   private

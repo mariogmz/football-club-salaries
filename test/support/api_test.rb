@@ -14,4 +14,9 @@ class ApiTest < Minitest::Test
   def fixture(filename)
     File.read(File.expand_path("../fixtures/#{filename}", __dir__))
   end
+
+  def assert_not(condition, message = nil)
+    condition = !condition
+    assert condition, message
+  end
 end
