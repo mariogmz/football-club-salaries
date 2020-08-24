@@ -21,6 +21,16 @@ class TeamTest < ApiTest
     assert_equal goal, @team.goal
   end
 
+  def test_bonus_percentage
+    @team.expects(:score).returns(5.0)
+    @team.expects(:goal).returns(10.0)
+    expected = 5.0 / 10.0
+
+    result = @team.bonus_percentage
+    assert_kind_of Float, result
+    assert_equal expected, result
+  end
+
   private
     def players_list
       players_data.map do |attributes|
