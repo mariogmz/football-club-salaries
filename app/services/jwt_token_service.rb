@@ -36,7 +36,10 @@ class JwtTokenService
       payload.merge(CLAIMS)
     end
 
-    def key_from_env(setting)
-      OpenSSL::PKey::RSA.new({ private: Settings.jwt.private_key, public: Settings.jwt.public_key }[setting])
+    def key_from_env(key_type)
+      OpenSSL::PKey::RSA.new({
+        private: Settings.jwt.private_key,
+        public: Settings.jwt.public_key
+      }[key_type])
     end
 end

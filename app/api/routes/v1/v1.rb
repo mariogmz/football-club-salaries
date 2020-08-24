@@ -9,10 +9,6 @@ module API::Routes
     include Grape::Jwt::Authentication
     auth :jwt
 
-    resource :hello do
-      get do
-        { message: "Hello World!" }
-      end
-    end
+    mount Salaries
   end
 end
