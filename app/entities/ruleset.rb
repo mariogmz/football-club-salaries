@@ -2,10 +2,10 @@
 
 class Ruleset
   DEFAULT = {
-    "A": 5,
-    "B": 10,
-    "C": 15,
-    "Cuauh": 20
+    "A" => 5,
+    "B" => 10,
+    "C" => 15,
+    "Cuauh" => 20
   }
   attr_reader :rules
 
@@ -31,7 +31,7 @@ class Ruleset
   private
     def parse(rules)
       return if rules.nil?
-      return JSON.parse(rules).transform_keys(&:to_sym) if rules.is_a? String
-      rules
+      return JSON.parse(rules) if rules.is_a? String
+      rules.transform_keys(&:to_s)
     end
 end
