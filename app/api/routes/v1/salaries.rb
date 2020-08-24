@@ -16,8 +16,8 @@ module API::Routes
         end
 
         desc "Returns players list including full salary calculation results"
-        get :/ do
-          { hello: "world" }
+        post :/ do
+          { jugadores: [] }
         end
       end
   end
