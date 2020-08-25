@@ -41,6 +41,6 @@ rescue Bundler::BundlerError => e
   warn e.message
   warn "Run `bundle install` to install missing gems"
   exit e.status_code
-rescue Gem::GemNotFoundException => e
+rescue LoadError => e
   raise e unless ENV["RACK_ENV"] == "production"
 end

@@ -13,6 +13,7 @@ gem "grape-swagger"
 gem "json"
 gem "jwt"
 gem "multi_json"
+gem "rake"
 gem "rack"
 gem "rack-cors"
 
@@ -31,7 +32,6 @@ group :development do
   gem "guard-minitest"
   gem "guard-rack"
   gem "guard-rubocop"
-  gem "rake"
 end
 
 group :test do
