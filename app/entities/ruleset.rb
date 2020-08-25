@@ -10,7 +10,7 @@ class Ruleset
   attr_reader :rules
 
   def initialize(rules = DEFAULT)
-    @rules = parse(rules)
+    @rules = parse(rules || DEFAULT)
   end
 
   # Adds a new rule given a level (Hash Key) and the goals per month value
