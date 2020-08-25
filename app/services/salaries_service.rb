@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
 class SalariesService
-  REQUEST_PLAYERS_KEY = :jugadores
-  REQUEST_TEAMS_RULESETS_KEY = :equipos
   attr_reader :teams
 
-  def initialize(request_body)
-    @players_list = parse_json(request_body)[REQUEST_PLAYERS_KEY]
-    @teams_rulesets = parse_teams_rulesets(request_body)
+  def initialize(players_list, teams_rulesets = nil)
+    @players_list = players_list
+    @teams_rulesets = parse_teams_rulesets(teams_rulesets)
     @teams = initialize_teams
   end
 
@@ -16,13 +14,7 @@ class SalariesService
   end
 
   private
-    def parse_json(json = nil)
-      return if json.nil?
-      JSON.parse(json, symbolize_names: true)
-    end
-
-    def parse_teams_rulesets(request_body)
-      teams_rulesets = parse_json(request_body)[REQUEST_TEAMS_RULESETS_KEY]
+    def parse_teams_rulesets(teams_rulesets)
       return if teams_rulesets.nil?
 
       teams_rulesets.each_with_object({}) do |team_ruleset, hash|
@@ -31,6 +23,8 @@ class SalariesService
     end
 
     def ruleset_hash(name)
+      return if @teams_rulesets.nil?
+
       @teams_rulesets[name.to_sym].each_with_object({}) do |ruleset, hash|
         hash[ruleset[:nivel]] = ruleset[:goles]
       end
