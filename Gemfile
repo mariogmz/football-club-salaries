@@ -35,6 +35,7 @@ group :development do
 end
 
 group :test do
+  gem "m", "~> 1.5.0"
   gem "minitest"
   gem "mocha"
   gem "rack-test", require: "rack/test"
