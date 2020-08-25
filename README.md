@@ -201,3 +201,143 @@ peticiones a la API usando el header de `Authorization` con un valor de
 
 El token tiene una expiración configurable en la app, también se puede modificar
 la identidad incluida en el payload según se necesite.
+
+## Demo
+
+La app está disponible en Heroku:
+
+1. Para hacer login hacer un `POST`:
+
+```
+https://fc-club-salaries.herokuapp.com/api/login
+```
+
+El endpoint espera un body:
+
+```
+username: mariogomezmtz
+password: test123!
+```
+
+2. Una vez que se obtenga el token y se haya incluido en el `Authorization`
+header, se puede hacer `POST` a:
+
+```
+https://fc-club-salaries.herokuapp.com/api/v1/salaries
+```
+
+Ejemplos de `body` para las peticiones:
+
+1. Lista de jugadores solamente:
+
+```json
+{
+   "jugadores": [
+      {
+         "nombre":"Juan Perez",
+         "nivel":"C",
+         "goles":10,
+         "sueldo":50000,
+         "bono":25000,
+         "sueldo_completo":null,
+         "equipo":"rojo"
+      },
+      {
+         "nombre":"EL Cuauh",
+         "nivel":"Cuauh",
+         "goles":30,
+         "sueldo":100000,
+         "bono":30000,
+         "sueldo_completo":null,
+         "equipo":"azul"
+      },
+      {
+         "nombre":"Cosme Fulanito",
+         "nivel":"A",
+         "goles":7,
+         "sueldo":20000,
+         "bono":10000,
+         "sueldo_completo":null,
+         "equipo":"azul"
+      },
+      {
+         "nombre":"El Rulo",
+         "nivel":"B",
+         "goles":9,
+         "sueldo":30000,
+         "bono":15000,
+         "sueldo_completo":null,
+         "equipo":"rojo"
+      }
+   ]
+}
+
+```
+
+2. Lista de jugadores con metas específicas por equipo:
+
+```json
+{
+   "jugadores": [
+      {
+         "nombre":"Juan Perez",
+         "nivel":"C",
+         "goles":10,
+         "sueldo":50000,
+         "bono":25000,
+         "sueldo_completo":null,
+         "equipo":"rojo"
+      },
+      {
+         "nombre":"EL Cuauh",
+         "nivel":"Cuauh",
+         "goles":30,
+         "sueldo":100000,
+         "bono":30000,
+         "sueldo_completo":null,
+         "equipo":"azul"
+      },
+      {
+         "nombre":"Cosme Fulanito",
+         "nivel":"A",
+         "goles":7,
+         "sueldo":20000,
+         "bono":10000,
+         "sueldo_completo":null,
+         "equipo":"azul"
+      },
+      {
+         "nombre":"El Rulo",
+         "nivel":"B",
+         "goles":9,
+         "sueldo":30000,
+         "bono":15000,
+         "sueldo_completo":null,
+         "equipo":"rojo"
+      }
+   ],
+   "equipos": [
+     {
+       "nombre": "rojo",
+       "metas": [
+         { "nivel": "A", "goles": 5 },
+         { "nivel": "B", "goles": 10 },
+         { "nivel": "C", "goles": 15 },
+         { "nivel": "Cuauh", "goles": 20 }
+       ]
+     },
+     {
+       "nombre": "azul",
+       "metas": [
+         { "nivel": "A", "goles": 10 },
+         { "nivel": "B", "goles": 17 },
+         { "nivel": "C", "goles": 20 },
+         { "nivel": "Cuauh", "goles": 22 }
+       ]
+     }
+   ]
+}
+
+```
+
+Nótese que se pueden cambiar los niveles como se necesite.
