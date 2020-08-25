@@ -17,6 +17,10 @@ module API::Routes
 
 
       def authorized?
+        if Settings.api.password == params[:password] &&
+           Settings.api.user == params[:username]
+          return Settings.api.user
+        end
         users = Settings.api.authorized_users.map(&:to_h)
         i = 0
         while i < users.size do
