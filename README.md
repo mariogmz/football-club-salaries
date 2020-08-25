@@ -1,5 +1,7 @@
 # Football Clubs Salaries API
 
+[![Build Status](https://travis-ci.com/mariogmz/football-club-salaries.svg?branch=master)](https://travis-ci.com/mariogmz/football-club-salaries)
+
 Este servicio calcula el salario completo basado en bonos y metas para equipos
 de fútbol, expone una API JSON que está lista para recibir la información de los
 miembros del equipo de fútbol y en base al rendimiento grupal e individual, cada
