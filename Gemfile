@@ -15,12 +15,12 @@ gem "jwt"
 gem "multi_json"
 gem "rake"
 gem "rack"
+gem "racksh"
 gem "rack-cors"
 
 group :development, :test do
   gem "airborne"
   gem "byebug"
-  gem "racksh"
   gem "rubocop", require: false
   gem "rubocop-performance", require: false
   gem "rubocop-rails_config", require: false
