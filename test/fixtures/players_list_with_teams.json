@@ -37,18 +37,24 @@
          "equipo":"rojo"
       }
    ],
-   "equipos": {
-     "rojo": [
-       { "nivel": "A", "goles": 5 },
-       { "nivel": "B", "goles": 10 },
-       { "nivel": "C", "goles": 15 },
-       { "nivel": "Cuauh", "goles": 20 }
-     ],
-     "azul": [
-       { "nivel": "A", "goles": 10 },
-       { "nivel": "B", "goles": 20 },
-       { "nivel": "C", "goles": 30 },
-       { "nivel": "Cuauh", "goles": 40 }
-     ]
-   }
+   "equipos": [
+     {
+       "nombre": "rojo",
+       "metas": [
+         { "nivel": "A", "goles": 5 },
+         { "nivel": "B", "goles": 10 },
+         { "nivel": "C", "goles": 15 },
+         { "nivel": "Cuauh", "goles": 20 }
+       ]
+     },
+     {
+       "nombre": "azul",
+       "metas": [
+         { "nivel": "A", "goles": 10 },
+         { "nivel": "B", "goles": 17 },
+         { "nivel": "C", "goles": 20 },
+         { "nivel": "Cuauh", "goles": 22 }
+       ]
+     }
+   ]
 }

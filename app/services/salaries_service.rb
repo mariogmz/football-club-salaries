@@ -7,7 +7,7 @@ class SalariesService
 
   def initialize(request_body)
     @players_list = parse_json(request_body)[REQUEST_PLAYERS_KEY]
-    @teams_rulesets = parse_json(request_body)[REQUEST_TEAMS_RULESETS_KEY] || {}
+    @teams_rulesets = parse_teams_rulesets(request_body)
     @teams = initialize_teams
   end
 
@@ -19,6 +19,15 @@ class SalariesService
     def parse_json(json = nil)
       return if json.nil?
       JSON.parse(json, symbolize_names: true)
+    end
+
+    def parse_teams_rulesets(request_body)
+      teams_rulesets = parse_json(request_body)[REQUEST_TEAMS_RULESETS_KEY]
+      return if teams_rulesets.nil?
+
+      teams_rulesets.each_with_object({}) do |team_ruleset, hash|
+        hash[team_ruleset[:nombre].to_sym] = team_ruleset[:metas]
+      end
     end
 
     def ruleset_hash(name)
