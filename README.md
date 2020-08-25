@@ -1,86 +1,128 @@
-# Grape Boilerplate
+# Football Clubs Salaries API
 
-Welcome to my custom grape boilerplate, feel free to use it to start developing
-a very basic ruby-base api using grape and jwt.
+Este servicio calcula el salario completo basado en bonos y metas para equipos
+de fútbol, expone una API JSON que está lista para recibir la información de los
+miembros del equipo de fútbol y en base al rendimiento grupal e individual, cada
+uno recibe un salario compuesto de un salario base más un bono.
 
-## Requirements
+Stack basado en un boilerplate hecho en un repositorio aparte
+[https://github.com/mariogmz/grape-boilerplate](https://github.com/mariogmz/grape-boilerplate)
 
-- Ruby 2.7.1 with bundler
+## Requisitos
+
+- Ruby 2.7.1 con bundler
+- Capacidad para generar llaves ssh
 
 ## Setup
 
-You can have Ruby installed at system-level, or you can use a version manager
-like [rbenv](https://github.com/rbenv/rbenv) or [rvm](https://rvm.io/) and get
-the required version installed.
+Se puede tener Ruby instalado a nivel de sistema, o se puede usar un version
+manager como [rbenv](https://github.com/rbenv/rbenv) ó [rvm](https://rvm.io/)
+para instalar la versión necesaria.
 
 ```
-# At project's root after clone
+# En la carpeta raíz del proyecto
 $ rbenv use
 $ gem install bundle
 $ bundle install
 ```
-## Configurations
+Antes de continuar se necesitan tener ciertas configuraciones.
 
-You will find a settings sample file inside `config/settings.yml.sample`,
-just copy and remove the `.sample` part and replace the values inside to get
-your app with the necessary configurations ready.
+## Configuración
+
+Se puede encontrar un archivo de ejemplo para la configuración en
+`config/settings.yml.sample`, se puede copiar el archivo removiendo la extensión
+`.sample` y reemplazar los valores necesarios.
 
 ```
 $ cp config/settings.sample.yml config/settings.yml
 ```
 
-### ENV vars
+### ENV
 
-Configuration can be defined using environment variables, these will be
-available through the `Settings` object but need to be defined using the
-following syntax:
+La configuración puede también ser definida usando variables de entorno,
+estas estarán disponibles en el código a través del objeto `Settings`, pero
+tendrán que se definidas usando la siguiente sintaxis:
 
 ```
 SETTINGS__LOGS__PATH="tmp/logs"
 ```
 
-Using double "_" between namespaces and with the `SETTINGS` prefix, these
-have precedence over the values defined inside `config/settings.yml`, this
-a way to configure settings when deployed to Heroku.
+Usando `__` (doble guión bajo) entre los namespaces y con el prefijo `SETTINGS`,
+estas configuraciones tienen precedencia sobre las definidas en el archivo de
+`config/settings.yml`, esto puede ayudar en la configuración en entornos donde
+no se pueden acceder a estos archivos (como Heroku).
 
 ### JWT
 
-You must generate a private and public key to sign your JWT Tokens in case
-you're going to use this as an authentication method, place the keys paths
-inside the settings file.
+Para la capa de autenticación en la API, se usa un mecanismo llamado
+[JWT](https://www.jwt.io).
 
-For ENV based environments you can set an ENV variable to set keys values
-to sign Tokens, thought this is not recommended it can help to use keys in
-enviroments like Heroku where you can't access the key file itself.
+Para poder generar y desencriptar tokens de JWT se requiere configurar un par
+de llaves RSA (una privada y una pública), para crearlas se puede correr el
+archivo `jwtRS256.sh` incluído en la carpeta raíz del proyecto (funciona en
+entornos Linux y OSX).
+
+Para su configuración se puede:
+
+1. Colocar directamente el valor de ambas llaves en los valores del archivo de
+configuración:
+
+```yaml
+jwt:
+  issuer: Sample Issuer
+  beholder: Sample Audience
+  private_key: |
+    -----BEGIN RSA PRIVATE KEY-----
+    AQUI VA TU LLAVE PRIVADA
+    -----END RSA PRIVATE KEY-----
+  public_key: |
+    -----BEGIN PUBLIC KEY-----
+    AQUI VA TU LLAVE PUBLICA
+    -----END PUBLIC KEY-----
+  expiration_time_minutes: 1440
+```
+2. Teniendo acceso a los archivos de llave y escribiendo sus rutas / urls en
+el archivo de configuración (nótese que las entradas tienen un nombre distinto):
+
+```yaml
+jwt:
+  issuer: Sample Issuer
+  beholder: Sample Audience
+  private_key_path: path_to_private_key_path
+  public_key_url: path_to_public_key_path
+  expiration_time_minutes: 1440
+```
+
+3. Usando variables de entorno:
 
 ```
 SETTINGS__JWT__PRIVATE_KEY="your private key here"
 SETTINGS__JWT__PUBLIC_KEY="your public key here"
 ```
 
-## Development
+## Desarrollo
 
-For convenience use the `guard` gem to ease your development workflow:
+Para facilidad de desarrollo se recomienda usar `guard`:
 
 ```
 $ bundle exec guard
 ```
 
-Otherwise the `bundle exec rackup` command should just work fine, reloading
-is needed after any changes to code.
+De otro modo se puede usar `bundle exec rackup` para ejecutar rack, de esta
+manera cada cambio en código se verá reflejado reiniciando el servicio.
 
-## Using Docker
+## Usando Docker
 
-You can run this app inside a standalone docker container:
+Se puede ejecutar la aplicación a través de un contenedor de docker:
 
 ```
-$ docker build -t grape-boilerplate .
-$ docker run -p 3000:3000 grape-boilerplate
+$ docker build -t football-club-salaries .
+$ docker run -p 3000:3000 football-club-salaries
 ```
 
-Visit http://localhost:3000/ and you will see a response from the app.
+La app estará accesible en http://localhost:3000/
 
-You can use `docker-compose` to run the app as well:
+Se puede también usar `docker-compose`:
 
 ```
 $ docker-compose up
@@ -88,28 +130,74 @@ $ docker-compose up
 
 ## Testing
 
-Use `rake` to perform either linting and testing:
+El comando `rake` por default ejecuta `rubocop` y `minitest`
 
 ```
-$ bundle exec rake test # testing only
-$ bundle exec rake # will perform linting and testing
+$ bundle exec rake test # sólo pruebas
+$ bundle exec rake # linter y pruebas
 ```
 
-## API and routes
+Alternativamente para ejecutar pruebas individuales se puede ejecutar:
 
-All the APIs inside this app are intended to be versioned, you can find a v1
-example already up, tested and ready to be used, to see all the mounted APIs
-use the rake task
+```
+$ bundle exec m test/ruta_de_tu_prueba/some_test.rb
+```
+
+## API & Rutas
+
+La API disponible en la aplicación puede ser versionada para futuros cambios,
+por ahora se encuentra disponible la `v1`, junto con rutas adicionales para
+autenticarse y obtener el token JWT.
+
+Para ver la lista de rutas:
 
 ```
 $ bundle exec rake routes
 
-      GET        /api/:version/hello
       POST       /api/login
+      POST       /api/:version/salaries
+      GET        /swagger_doc
+      GET        /swagger_doc/:name
       *          /*path
 ```
 
-## Documentation
+## Documentación
 
-Project's documentation is generated using swagger, a GET to `/swagger_doc`
-should display a valid JSON to use inside [Swagger UI](https://editor.swagger.io/)
+La documentación de la API es generada usando Swagger, para obtener el schema
+de la documentación:
+
+```
+GET        /swagger_doc
+```
+
+El resultado de la consulta se puede visualizar usando
+[Swagger UI](https://editor.swagger.io/)
+
+## ¿Cómo usar la API?
+
+Antes de poder consultar la API se debe autenticar y obtener un token JWT, la
+ruta es
+
+```
+POST       /api/login
+```
+Se obtendrá una respuesta JSON como la siguiente:
+
+```json
+{
+    "status": "success",
+    "data": {
+        "user": "mariogomezmtz",
+        "jwt": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJ1c2VybmFtZSI6Im1hcmlvZ29tZXptdHoiLCJleHAiOjE2MDM1MDI0MzIsImlzcyI6IlNhbXBsZSBJc3N1ZXIiLCJhdWQiOiJTYW1wbGUgQXVkaWVuY2UifQ.dmvR4oqwtdSprSWqYeFw0j5hRBk7LYn4U14qEmvlglyUiVP9gXLaH929MnHeIa3grNOPQGsEmi1_Reak7t9CObqlVw3Pwp5_sLBl7UsFFjWCcTeIzv2MgB0eVShA8IUby_Bdbc9EZ-OlC3rVH1A2m4nwN_a6SgN8LNXoNeFA9otoBLK_UazHanvaPiNT8I6YL0CxDQs2F7Wx_czcTEVZES0Lst_1qNBrDKIJ3KznDAyliJJsH9XUNOzBordiK3IQx9UUKXnEwq9yKlk7eJI5RXVldmNfN6CITP7jZi3jM3yk0N7joOQJBlHYSvLZWhmLMJzU3n8eCIN5JPiXQwqy7AM2BEB1lxQDkRvvsGwUI4DgLOz8YHxjtI5A4O75xlYoEY-KujU5T8vVev2_m5J0Ww18NO66en8_cz8ZHEIaDhBpb3ET7BUNqV3rCZt8jUUeEdr1VL6O2FaYqUeFIAUZxA39OBvQCPN8wuzXwSjNnnLhCLkL04n84tYlEgooSqwKvwzHHdB8aa47S8iPZ36K3hPmsb1vsIdPukrHkBGD7_XUtLypeY-gmbGfite1pETCY8jxQcSTQHvxLq8eE5_i4wdF5jkZmEiaAzraqCfelbp-UptqHv6As_4SiZDJkZH-Jma8xlCVO-_XimzHzSiMRbG8wdJsaKwOPpvj2Y2lfTw"
+    }
+}
+```
+
+El token se encuentra dentro de el namespace de `data.jwt`.
+
+Una vez que se tiene el token JWT, debe incluirse en los headers de las
+peticiones a la API usando el header de `Authorization` con un valor de
+`Bearer TOKEN_JWT`.
+
+El token tiene una expiración configurable en la app, también se puede modificar
+la identidad incluida en el payload según se necesite.
