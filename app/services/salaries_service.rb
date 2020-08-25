@@ -11,6 +11,10 @@ class SalariesService
     @teams = initialize_teams
   end
 
+  def players_salaries
+    teams.map(&:players_with_salaries).flatten
+  end
+
   private
     def parse_json(json = nil)
       return if json.nil?
